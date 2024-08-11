@@ -1,0 +1,17 @@
+{
+  "name": "clv-auto-checkinout",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.3",
+    "cheerio": "^1.0.0",
+    "request-promise": "^4.2.6"
+  }
+}
