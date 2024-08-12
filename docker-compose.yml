@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  clv-aotu-checkinout:
+    build: .
+    container_name: clv-aotu-checkinout
+    restart: always
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
