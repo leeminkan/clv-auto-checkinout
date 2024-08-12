@@ -3,12 +3,18 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const cron = require("node-cron");
 require("dotenv").config();
+const sendMessageToTelegram = require("./send-message-to-telegram");
 
 const LOGIN_URL = "https://blueprint.cyberlogitec.com.vn/sso/login";
 const CHECKINOUT_URL =
   "https://blueprint.cyberlogitec.com.vn/api/checkInOut/insert";
 
-async function clvAutoCheckinout(username, password) {
+async function clvAutoCheckinout({
+  username,
+  password,
+  telegramBotToken,
+  telegramChatId,
+}) {
   try {
     if (!username || !password)
       throw new Error("Username, passowrd are required");
@@ -103,8 +109,22 @@ async function clvAutoCheckinout(username, password) {
     );
 
     console.log("===Call API success===", response.data);
+    if (telegramBotToken && telegramChatId) {
+      await sendMessageToTelegram({
+        telegramBotToken,
+        telegramChatId,
+        message: `Auto Checkinout success`,
+      });
+    }
   } catch (error) {
     console.error("===Error===", error);
+    if (telegramBotToken && telegramChatId) {
+      await sendMessageToTelegram({
+        telegramBotToken,
+        telegramChatId,
+        message: `Auto Checkinout error ${error}`,
+      });
+    }
   }
 }
 
@@ -121,7 +141,12 @@ async function clvAutoCheckinout(username, password) {
     "0 8 * * 1-5",
     async () => {
       console.log("===RUN CHECKIN JOB===");
-      await clvAutoCheckinout(process.env.USERNAME, process.env.PASSWORD);
+      await clvAutoCheckinout({
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD,
+        telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
+        telegramChatId: process.env.TELEGRAM_CHAT_ID,
+      });
     },
     {
       scheduled: true,
@@ -134,7 +159,12 @@ async function clvAutoCheckinout(username, password) {
     "40 17 * * 1-5",
     async () => {
       console.log("===RUN CHECKIN JOB===");
-      await clvAutoCheckinout(process.env.USERNAME, process.env.PASSWORD);
+      await clvAutoCheckinout({
+        username: process.env.USERNAME,
+        password: process.env.PASSWORD,
+        telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
+        telegramChatId: process.env.TELEGRAM_CHAT_ID,
+      });
     },
     {
       scheduled: true,
