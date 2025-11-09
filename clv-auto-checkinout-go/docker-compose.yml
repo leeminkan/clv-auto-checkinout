@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  clv-auto-checkinout-go:
+    build: .
+    container_name: clv-auto-checkinout-go
+    restart: always
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    env_file:
+      - .env
